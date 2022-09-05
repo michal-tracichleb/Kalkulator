@@ -97,10 +97,19 @@ namespace Kalkulator
                     Console.Write("Wprowadź drugą liczbę: ");
                     inputStringB = Console.ReadLine();
 
-                    if (double.TryParse(inputStringB, out bDouble))
+                    if ((mathOperation == "/" || mathOperation == ":") && inputStringB == "0")
+                    {
+                        Console.ForegroundColor = ConsoleColor.DarkRed;
+                        Console.WriteLine("Nie można dzielić przez zero!");
+                        Console.ResetColor();
+                        Console.WriteLine("Wciśnij dowolny klawisz, aby powtórzyć.");
+                        Console.ReadKey();
+                        again = "T";
+                    }
+                    else if (double.TryParse(inputStringB, out bDouble))
                     {
                         again = "F";
-                    }
+                    }   
                     else
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
