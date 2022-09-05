@@ -7,151 +7,231 @@ namespace Kalkulator
         static void Main(string[] args)
         {
 
-            string inputStringA;
-            string inputStringB;
+            string inputString;
             string mathOperation;
-            short idMathOperation = 0;
-            double aDouble = 0;
-            double bDouble = 0;
-            double c = 0;
-            string again = "T";
-            Console.ForegroundColor = ConsoleColor.DarkYellow;
-            Console.WriteLine("Witaj w kalkulatorze konsolowym!");
-            Console.ResetColor();
+            short idMathOperation;
+            double outputDouble;
+            string again;
+            double result;
+            double resultTemporary = 0;
 
             do
             {
+                var numbers = new List<double> { };
+                var mathOperations = new List<string> { };
+                short j = -1;
                 do
                 {
-                    Console.Write("Wprowadź pierwszą liczbę: ");
-                    inputStringA = Console.ReadLine();
-
-                    if (double.TryParse(inputStringA, out aDouble))
+                    do
                     {
-                        again = "F";
-                    }
-                    else
-                    {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine($"Wprowadzona wartość: '{inputStringA}' nie jest liczbą.\n");
-                        Console.ResetColor();
-                        Console.WriteLine("Wciśnij dowolny klawisz, aby powtórzyć.");
-                        Console.ReadKey();
                         Console.Clear();
-                        again = "T";
-                    }
+                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                        Console.WriteLine("Witaj w kalkulatorze konsolowym!\nPamiętaj, aby każdą wprowadzoną liczbę i operator (+, -, *, /, =) zkończyć przyciskiem 'ENTER'.\n");
+                        Console.ResetColor();
+
+                        Console.Write("Wprowadź działanie: ");
+                        for (int i = 0; i < numbers.Count; i++)
+                        {
+                            Console.Write(numbers[i] + " ");
+                            Console.Write(mathOperations[i] + " ");
+                        }
+
+                        inputString = Console.ReadLine();
+                        
+                        if (mathOperations.Count!= 0)
+                        {
+                            if ((mathOperations[j] == "/" || mathOperations[j] == ":") && inputString == "0")
+                            {
+                            Console.ForegroundColor = ConsoleColor.DarkRed;
+                            Console.WriteLine("Nie można dzielić przez zero!");
+                            Console.ResetColor();
+                            Console.WriteLine("Wciśnij dowolny klawisz, aby powtórzyć.");
+                            Console.ReadKey();
+                            again = "T";
+                            }
+                            else if (double.TryParse(inputString, out outputDouble))
+                            {
+                                numbers.Add(outputDouble);
+                                again = "F";
+                            }
+                            else
+                            {
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.WriteLine($"Wprowadzona wartość: '{inputString}' nie jest liczbą lub zamiast przecinka jest kropka.\n");
+                                Console.ResetColor();
+                                Console.WriteLine("Wciśnij dowolny klawisz, aby powtórzyć.");
+                                Console.ReadKey();
+                                Console.Clear();
+                                again = "T";
+                            }
+                        }
+                        else if (double.TryParse(inputString, out outputDouble))
+                        {
+                            numbers.Add(outputDouble);
+                            again = "F";
+                        }
+                        else
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine($"Wprowadzona wartość: '{inputString}' nie jest liczbą lub zamiast przecinka jest kropka.\n");
+                            Console.ResetColor();
+                            Console.WriteLine("Wciśnij dowolny klawisz, aby powtórzyć.");
+                            Console.ReadKey();
+                            Console.Clear();
+                            again = "T";
+                        }
+                    } while (again == "T");
+
+                    again = "T";
+                    do
+                    {
+
+                        Console.Clear();
+                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                        Console.WriteLine("Witaj w kalkulatorze konsolowym!\nPamiętaj, aby każdą wprowadzoną liczbę i operator (+, -, *, /, =) zkończyć przyciskiem 'ENTER'.\n");
+                        Console.ResetColor();
+
+                        Console.Write("Wprowadź działanie: ");
+
+                        for (int i = 0; i < numbers.Count; i++)
+                        {
+                            Console.Write(numbers[i] + " ");
+                            if (i != numbers.Count - 1)
+                            Console.Write(mathOperations[i] + " ");
+                        }
+
+                        mathOperation = Console.ReadLine();
+                        if (mathOperation == "+")
+                        {
+                            mathOperations.Add("+");
+                            idMathOperation = 1;
+                        }
+                        else if (mathOperation == "-")
+                        {
+                            mathOperations.Add("-");
+                            idMathOperation = 1;
+                        }
+                        else if (mathOperation == "*")
+                        {
+                            mathOperations.Add("*");
+                            idMathOperation = 1;
+                        }
+                        else if (mathOperation == "/" || mathOperation == ":")
+                        {
+                            mathOperations.Add(":");
+                            idMathOperation = 1;
+                        }
+                        else if (mathOperation == "=")
+                        {
+                            mathOperations.Add("=");
+                            idMathOperation = 1;
+                            again = "F";
+                        }
+                        else
+                        {
+                            idMathOperation = 0;
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine($"Wprowadzony znak: '{mathOperation}' nie jest poprawny.\n");
+                            Console.ResetColor();
+                            Console.WriteLine("Wciśnij dowolny klawisz, aby powtórzyć wybór.");
+                            Console.ReadKey();
+                            Console.Clear();
+                        }
+                    } while (idMathOperation == 0);
+
+                    j++;
+
                 } while (again == "T");
 
+                result = numbers[0];
 
-                do
+                for (int i = 0; i < numbers.Count; i++)
                 {
-                    Console.Clear();
-                    Console.ForegroundColor = ConsoleColor.DarkGreen;
-                    Console.WriteLine($"Wprowadź pierwszą liczbę: {inputStringA}");
-                    Console.ResetColor();
+                    if (i + 1 != numbers.Count)
+                    {
+                        if (mathOperations[i + 1] == "*" || mathOperations[i + 1] == ":")
+                        {
+                            j = 1;
+                            resultTemporary = numbers[i + j];
+                            do
+                            {
+                                again = "F";
+                                if (mathOperations[i + j] == "*")
+                                {
+                                    resultTemporary = resultTemporary * numbers[i + j + 1];
+                                }
+                                if (mathOperations[i + j] == ":")
+                                {
+                                    resultTemporary = resultTemporary / numbers[i + j + 1];
+                                }
+                                if (i + 1 + j != numbers.Count)
+                                {
+                                    if (mathOperations[i + 1 + j] == "*" || mathOperations[i + 1 + j] == ":")
+                                    {
+                                        again = "T";
+                                    }
+                                }
+                                j++;
+                            } while (again == "T");
 
-                    Console.Write("\nCo chcesz zrobić?\n" +
-                        "Dodawać, wybierz z klawiatury '+'\n" +
-                        "Odejmować, wybierz z klawiatury '-'\n" +
-                        "Mnożyć, wybierz z klawiatury '*'\n" +
-                        "Dzielić, wybierz z klawiatury ':' lub '/''\n" +
-                        "Wprowadź znak: ");
+                            if (mathOperations[i] == "+")
+                            {
+                                result = result + resultTemporary;
+                            }
+                            if (mathOperations[i] == "-")
+                            {
+                                result = result - resultTemporary;
+                            }
 
-                    mathOperation = Console.ReadLine();
-                    if (mathOperation == "+")
-                    {
-                        idMathOperation = 1;
+                            i = i + j - 1;
+                        }
+                        else
+                        {
+                            if (mathOperations[i] == "+")
+                            {
+                                result = result + numbers[i + 1];
+                            }
+                            if (mathOperations[i] == "-")
+                            {
+                                result = result - numbers[i + 1];
+                            }
+                            if (mathOperations[i] == "*")
+                            {
+                                result = result * numbers[i + 1];
+                            }
+                            if (mathOperations[i] == ":")
+                            {
+                                result = result / numbers[i + 1];
+                            }
+                        }
                     }
-                    else if (mathOperation == "-")
-                    {
-                        idMathOperation = 2;
-                    }
-                    else if (mathOperation == "*")
-                    {
-                        idMathOperation = 3;
-                    }
-                    else if (mathOperation == "/" || mathOperation == ":")
-                    {
-                        idMathOperation = 4;
-                    }
-                    else
-                    {
-                        idMathOperation = 0;
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine($"Wprowadzony znak: '{mathOperation}' nie jest poprawny.\n");
-                        Console.ResetColor();
-                        Console.WriteLine("Wciśnij dowolny klawisz, aby powtórzyć wybór.");
-                        Console.ReadKey();
-                        Console.Clear();
-                    }
-                } while (idMathOperation == 0);
-
-
-                do
-                {
-                    Console.Clear();
-                    Console.ForegroundColor = ConsoleColor.DarkGreen;
-                    Console.WriteLine($"Aktualne działanie: {inputStringA} {mathOperation} ");
-                    Console.ResetColor();
-
-                    Console.Write("Wprowadź drugą liczbę: ");
-                    inputStringB = Console.ReadLine();
-
-                    if ((mathOperation == "/" || mathOperation == ":") && inputStringB == "0")
-                    {
-                        Console.ForegroundColor = ConsoleColor.DarkRed;
-                        Console.WriteLine("Nie można dzielić przez zero!");
-                        Console.ResetColor();
-                        Console.WriteLine("Wciśnij dowolny klawisz, aby powtórzyć.");
-                        Console.ReadKey();
-                        again = "T";
-                    }
-                    else if (double.TryParse(inputStringB, out bDouble))
-                    {
-                        again = "F";
-                    }   
-                    else
-                    {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine($"Wprowadzona wartość: '{inputStringB}' nie jest liczbą.\n");
-                        Console.ResetColor();
-                        Console.WriteLine("Wciśnij dowolny klawisz, aby powtórzyć.");
-                        Console.ReadKey();
-                        again = "T";
-                    }
-                } while (again == "T");
-
+                }
 
                 Console.Clear();
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                Console.WriteLine("Witaj w kalkulatorze konsolowym!\n");
+                Console.ResetColor();
 
-                if (idMathOperation == 1)
+                Console.Write("Wprowadzone działanie: ");
+                for (int i = 0; i < numbers.Count; i++)
                 {
-                    c = aDouble + bDouble;
+                    Console.Write(numbers[i] + " ");
+                    Console.Write(mathOperations[i] + " ");
                 }
-                else if (idMathOperation == 2)
-                {
-                    c = aDouble - bDouble;
-                }
-                else if (idMathOperation == 3)
-                {
-                    c = aDouble * bDouble;
-                }
-                else if (idMathOperation == 4)
-                {
-                    c = aDouble / bDouble;
-                }
+                Console.WriteLine($"{result}\n");
 
                 Console.ForegroundColor = ConsoleColor.DarkGreen;
-                Console.WriteLine($"Wynik działania {aDouble} {mathOperation} {inputStringB} = {c}\n");
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
                 Console.WriteLine($"Kolejne działanie?\nJeśli tak wbybierz T lub cokoliwek innego aby zakończyć.");
                 again = Console.ReadLine();
                 Console.Clear();
                 Console.ResetColor();
-            } while (again == "T" || again == "t");
 
+            } while (again == "T" || again == "t");
+            
             Console.ForegroundColor = ConsoleColor.DarkRed;
-            Console.WriteLine($"Zamykamy konsolę, trzymaj się! :)");
+            Console.WriteLine($"Zamykamy konsolę, trzymaj się! :)\n");
+            Console.ResetColor();
         }
     }
 }
